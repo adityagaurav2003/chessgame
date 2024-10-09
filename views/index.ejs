@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        /* Basic styles for the chessboard */
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            width: 400px;
+            height: 400px;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .light {
+            background-color: #f0d9b5; /* Light square color */
+        }
+        .dark {
+            background-color: #b58863; /* Dark square color */
+        }
+        .piece {
+            cursor: grab;
+            transition: transform 0.1s; /* Adding a little animation */
+        }
+        .piece:active {
+            cursor: grabbing;
+            transform: scale(1.2); /* Slightly enlarge piece on drag */
+        }
+        .white {
+            color: #f0f0f0; /* Lighter color for white pieces */
+        }
+        .black {
+            color: #1c1c1c; /* Darker color for black pieces */
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>Chess Game</h1>
+    <div class="chessboard"></div>
+    
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+     integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" 
+     crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" 
+     integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" 
+     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/chessgame.js"></script>
+</body>
+</html>
