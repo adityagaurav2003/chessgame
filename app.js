@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const socket = require("socket.io");
 const { Chess } = require("chess.js");
@@ -59,6 +61,8 @@ io.on("connection", (uniquesocket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log("Server is listening on http://localhost:3000");
+// Use the PORT from the environment variables
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is listening on http://localhost:${PORT}`);
 });
