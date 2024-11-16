@@ -11,15 +11,21 @@ const server = http.createServer(app);
 const io = socket(server);
 const chess = new Chess();
 
-let players = {};
+let players = {}; // Object to keep track of players
 
+// Set EJS as the view engine and define views directory
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views")); // Explicitly set views directory
+
+// Serve static files from the public folder
 app.use(express.static(path.join(__dirname, "public")));
 
+// Route for the main page
 app.get("/", (req, res) => {
     res.render("index", { title: "Chess Game" });
 });
 
+// Socket.io connection handling
 io.on("connection", (uniquesocket) => {
     console.log("A player connected:", uniquesocket.id);
 
@@ -34,6 +40,7 @@ io.on("connection", (uniquesocket) => {
         uniquesocket.emit("spectatorRole");
     }
 
+    // Handle player disconnection
     uniquesocket.on("disconnect", () => {
         if (uniquesocket.id === players.white) {
             delete players.white;
@@ -43,25 +50,26 @@ io.on("connection", (uniquesocket) => {
         console.log("A player disconnected:", uniquesocket.id);
     });
 
+    // Handle moves from players
     uniquesocket.on("move", (move) => {
-        // Ensure only the current player can make a move
+        // Validate move based on the player's turn
         if ((chess.turn() === "w" && uniquesocket.id !== players.white) ||
             (chess.turn() === "b" && uniquesocket.id !== players.black)) {
-            return;
+            return; // Ignore the move if it's not the player's turn
         }
 
         const result = chess.move(move);
         if (result) {
             io.emit("move", move); // Broadcast the move to all players
-            io.emit("boardState", chess.fen()); // Update the board state
+            io.emit("boardState", chess.fen()); // Send the board state
         } else {
             console.log("Invalid move:", move);
-            uniquesocket.emit("invalidMove", move); // Send invalid move message to the player
+            uniquesocket.emit("invalidMove", move); // Notify the player of invalid move
         }
     });
 });
 
-// Use the PORT from the environment variables
+// Use the PORT from environment variables or default to 3000
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`);
